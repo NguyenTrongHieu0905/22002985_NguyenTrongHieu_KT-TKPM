@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  flask1:
+    build: .
+    networks:
+      - flask_network
+    restart: always
+
+  flask2:
+    build: .
+    networks:
+      - flask_network
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - flask1
+      - flask2
+    networks:
+      - flask_network
+    restart: always
+
+networks:
+  flask_network:
+    driver: bridge
